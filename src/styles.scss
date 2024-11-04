@@ -2,10 +2,53 @@
 $primary-color: #04aa6d;
 
 .sr-only {
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+button.primary {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: $primary-color;
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex: 1 1 auto;
+
+  button {
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    border: 2px $primary-color solid;
+
+    &.close {
+      background-color: white;
+      color: $primary-color;
+    }
+
+    &.next {
+      background-color: $primary-color;
+      color: white;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+    }
+  }
 }

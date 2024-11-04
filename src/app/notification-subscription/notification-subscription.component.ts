@@ -1,12 +1,13 @@
 import { Component, ElementRef, signal, viewChild } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { CloseIconComponent } from '../close-icon/close-icon.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   PurchaseService,
   SubscriptionPurchaseOrder,
 } from '../../services/purchase.service';
 import { PurchaseTypeFormComponent } from './purchase-type-form/purchase-type-form.component';
+import { SubscriptionFormComponent } from './subscription-form/subscription-form.component';
 
 @Component({
   selector: 'app-notification-subscription',
@@ -16,6 +17,7 @@ import { PurchaseTypeFormComponent } from './purchase-type-form/purchase-type-fo
     CloseIconComponent,
     ReactiveFormsModule,
     PurchaseTypeFormComponent,
+    SubscriptionFormComponent,
   ],
   templateUrl: './notification-subscription.component.html',
   styleUrl: './notification-subscription.component.scss',
@@ -25,19 +27,10 @@ export class NotificationSubscriptionComponent {
   dialogOpenElement = signal<HTMLElement | undefined>(undefined);
   dialogClose = viewChild<ElementRef>('dialogClose');
 
-  subscriptionForm = this.formBuilder.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    ssn: ['', Validators.required],
-    darkPact: [false, Validators.requiredTrue],
-  });
   purchaseType = signal<PurchaseType | undefined>(undefined);
   purchaseComplete = signal(false);
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private purchaseService: PurchaseService,
-  ) {}
+  constructor(private purchaseService: PurchaseService) {}
 
   showBuyNowDialog(event: Event) {
     this.dialogOpenElement.set(event.target as HTMLElement);
@@ -50,19 +43,11 @@ export class NotificationSubscriptionComponent {
   closeBuyNowDialog() {
     this.showDialog.set(false);
     this.purchaseType.set(undefined);
-    this.subscriptionForm.reset();
     this.dialogOpenElement()?.focus();
   }
 
-  handleSubscriptionFormSubmit($event: Event) {
-    $event.preventDefault();
-    this.subscriptionForm.markAllAsTouched();
-    if (this.subscriptionForm.invalid) return;
-
-    this.purchaseService.purchaseSubscription(
-      this.subscriptionForm.value as SubscriptionPurchaseOrder,
-    );
-
+  handleSubscriptionFormSubmit(order: SubscriptionPurchaseOrder) {
+    this.purchaseService.purchaseSubscription(order);
     this.purchaseComplete.set(true);
   }
 

@@ -2,6 +2,10 @@ import { NotificationSubscriptionComponent } from './notification-subscription.c
 import { render, screen, waitFor, within } from '@testing-library/angular';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { PurchaseService } from '../../services/purchase.service';
+import {
+  fillInPurchaseTypeForm,
+  fillInSubscriptionPurchaseOrderForm,
+} from './notification-subscription-test-utils';
 
 describe('NotificationSubscriptionComponent', () => {
   let purchaseService: PurchaseService;
@@ -41,85 +45,18 @@ describe('NotificationSubscriptionComponent', () => {
     expect(buttons[1]).toHaveFocus();
   });
 
-  it('should require all fields for subscription', async () => {
-    const { user } = await renderComponent();
-    const { dialog } = await openDialog(user);
-
-    const radioGroup = within(dialog).getByRole('group');
-    expect(radioGroup).toHaveTextContent(
-      /Would you like a subscription or a one time purchase?/i,
-    );
-
-    const subscriptionOption =
-      within(radioGroup).getByLabelText('Subscription');
-    await user.click(subscriptionOption);
-
-    const nextButton = within(dialog).getByRole('button', { name: /next/i });
-    await user.click(nextButton);
-
-    expect(radioGroup).not.toBeVisible();
-
-    const submitButton = within(dialog).getByRole('button', {
-      name: /submit/i,
-    });
-    await user.click(submitButton);
-
-    expect(purchaseService.purchaseSubscription).toHaveBeenCalledTimes(0);
-
-    const firstNameInput = screen.getByLabelText('First name');
-    expect(firstNameInput).toHaveAccessibleErrorMessage(
-      'First name is required',
-    );
-
-    const lastNameInput = screen.getByLabelText('Last name');
-    expect(lastNameInput).toHaveAccessibleErrorMessage('Last name is required');
-
-    const ssnInput = screen.getByLabelText('SSN');
-    expect(ssnInput).toHaveAccessibleErrorMessage('SSN is required');
-
-    const acceptPactCheckbox = screen.getByRole('checkbox');
-    expect(acceptPactCheckbox).toHaveAccessibleErrorMessage(
-      'You are required to accept all risks of this product before purchasing',
-    );
-  });
-
   it('should capture subscription info', async () => {
     const { user } = await renderComponent();
-    const { dialog } = await openDialog(user);
+    await openDialog(user);
 
-    const radioGroup = within(dialog).getByRole('group');
-    expect(radioGroup).toHaveTextContent(
-      /Would you like a subscription or a one time purchase?/i,
-    );
+    await fillInPurchaseTypeForm(user, 'Subscription');
 
-    const subscriptionOption =
-      within(radioGroup).getByLabelText('Subscription');
-    await user.click(subscriptionOption);
-
-    const nextButton = within(dialog).getByRole('button', { name: /next/i });
-    await user.click(nextButton);
-
-    const firstNameInput = screen.getByLabelText('First name');
-    await user.type(firstNameInput, 'Alex');
-
-    const lastNameInput = screen.getByLabelText('Last name');
-    await user.type(lastNameInput, 'McClure');
-
-    const ssnInput = screen.getByLabelText('SSN');
-    await user.type(ssnInput, '123456789');
-
-    const acceptPactCheckbox = screen.getByRole('checkbox');
-    await user.click(acceptPactCheckbox);
-    expect(acceptPactCheckbox).toBeChecked();
-
-    const submitButton = within(dialog).getByRole('button', {
-      name: /submit/i,
+    await fillInSubscriptionPurchaseOrderForm(user, {
+      firstName: 'Alex',
+      lastName: 'McClure',
+      ssn: '123456789',
     });
-    await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(firstNameInput).not.toBeVisible();
-    });
     await screen.findByRole('heading', {
       name: 'Your order will arrive eventually',
     });
@@ -137,17 +74,7 @@ describe('NotificationSubscriptionComponent', () => {
     const { user, detectChanges } = await renderComponent();
     const { dialog } = await openDialog(user);
 
-    const radioGroup = within(dialog).getByRole('group');
-    expect(radioGroup).toHaveTextContent(
-      /Would you like a subscription or a one time purchase?/i,
-    );
-
-    const subscriptionOption =
-      within(radioGroup).getByLabelText('Subscription');
-    await user.click(subscriptionOption);
-
-    const nextButton = within(dialog).getByRole('button', { name: /next/i });
-    await user.click(nextButton);
+    await fillInPurchaseTypeForm(user, 'Subscription');
 
     const closeButton = within(dialog).getByRole('button', {
       name: /close dialog/i,

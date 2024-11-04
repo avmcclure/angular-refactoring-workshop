@@ -1,0 +1,87 @@
+<form
+  [formGroup]="subscriptionForm"
+  (submit)="handleSubscriptionFormSubmit($event)"
+>
+  <div>
+    <label for="firstName">First name</label>
+    <input
+      type="text"
+      id="firstName"
+      formControlName="firstName"
+      [attr.aria-invalid]="subscriptionForm.controls.firstName.invalid"
+      aria-errormessage="firstNameError"
+    />
+    @if (
+      subscriptionForm.controls.firstName.invalid &&
+      !subscriptionForm.controls.firstName.untouched
+      ) {
+      <div id="firstNameError">First name is required</div>
+    }
+  </div>
+  <div>
+    <label for="lastName">Last name</label>
+    <input
+      type="text"
+      id="lastName"
+      formControlName="lastName"
+      [attr.aria-invalid]="subscriptionForm.controls.lastName.invalid"
+      aria-errormessage="lastNameError"
+    />
+    @if (
+      subscriptionForm.controls.lastName.invalid &&
+      !subscriptionForm.controls.lastName.untouched
+      ) {
+      <div id="lastNameError">Last name is required</div>
+    }
+  </div>
+  <div>
+    <label for="ssn">SSN</label>
+    <input
+      type="text"
+      id="ssn"
+      formControlName="ssn"
+      [attr.aria-invalid]="subscriptionForm.controls.ssn.invalid"
+      aria-errormessage="ssnError"
+    />
+    @if (
+      subscriptionForm.controls.ssn.invalid &&
+      !subscriptionForm.controls.ssn.untouched
+      ) {
+      <div id="ssnError" role="alert">
+        @if (subscriptionForm.controls.ssn.hasError("required")) {
+          SSN is required
+        } @else if (subscriptionForm.controls.ssn.hasError("format")) {
+          SSN is improperly formatted
+        }
+      </div>
+    }
+  </div>
+  <div>
+    <label for="darkPact">I accept all risks of this product</label>
+    <input
+      type="checkbox"
+      id="darkPact"
+      formControlName="darkPact"
+      [attr.aria-invalid]="subscriptionForm.controls.darkPact.invalid"
+      aria-errormessage="darkPactError"
+    />
+    @if (
+      subscriptionForm.controls.darkPact.invalid &&
+      !subscriptionForm.controls.darkPact.untouched
+      ) {
+      <div id="darkPactError" role="alert">
+        You are required to accept all risks of this product before
+        purchasing
+      </div>
+    }
+  </div>
+  <div class="button-container">
+    <button
+      class="close"
+      (click)="handleClose($event)"
+    >
+      Close
+    </button>
+    <button class="next" type="submit">Submit</button>
+  </div>
+</form>

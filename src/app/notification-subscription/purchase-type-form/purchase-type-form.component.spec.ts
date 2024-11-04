@@ -1,6 +1,7 @@
 import { userEvent } from '@testing-library/user-event';
 import { render, screen, within } from '@testing-library/angular';
 import { PurchaseTypeFormComponent } from './purchase-type-form.component';
+import { fillInPurchaseTypeForm } from '../notification-subscription-test-utils';
 
 describe('PurchaseTypeFormComponent', () => {
   const onClose = jest.fn();
@@ -21,18 +22,8 @@ describe('PurchaseTypeFormComponent', () => {
 
   it(`should emit purchase type when 'Next' button is clicked`, async () => {
     const { user } = await renderComponent();
-    const nextButton = screen.getByRole('button', { name: /next/i });
 
-    const radioGroup = screen.getByRole('group');
-    expect(radioGroup).toHaveTextContent(
-      /Would you like a subscription or a one time purchase?/i,
-    );
-
-    const subscriptionOption =
-      within(radioGroup).getByLabelText('Subscription');
-    await user.click(subscriptionOption);
-
-    await user.click(nextButton);
+    await fillInPurchaseTypeForm(user, 'Subscription');
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith('sub');
