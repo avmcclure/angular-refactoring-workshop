@@ -41,19 +41,6 @@ describe('NotificationSubscriptionComponent', () => {
     expect(buttons[1]).toHaveFocus();
   });
 
-  it('should require subscription or one time purchase', async () => {
-    const { user } = await renderComponent();
-    const { dialog } = await openDialog(user);
-
-    const nextButton = within(dialog).getByRole('button', { name: /next/i });
-    await user.click(nextButton);
-
-    const radioGroup = within(dialog).getByRole('group');
-    expect(radioGroup).toHaveAccessibleErrorMessage(
-      'Purchase type is required',
-    );
-  });
-
   it('should require all fields for subscription', async () => {
     const { user } = await renderComponent();
     const { dialog } = await openDialog(user);

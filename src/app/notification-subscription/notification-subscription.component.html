@@ -105,53 +105,13 @@
     </button>
   </div>
   <div class="dialog-content">
-    @if(purchaseComplete()) {
+    @if (purchaseComplete()) {
       <h1>Your order will arrive eventually</h1>
     } @else if (!purchaseType()) {
-      <form
-        [formGroup]="purchaseTypeForm"
-        (submit)="handlePurchaseTypeFormSubmit($event)"
-      >
-        <fieldset
-          [attr.aria-invalid]="purchaseTypeForm.controls.purchaseType.invalid"
-          aria-errormessage="purchaseTypeError"
-        >
-          <legend>Would you like a subscription or a one time purchase?</legend>
-          <div>
-            <input
-              id="subscription"
-              name="purchaseType"
-              type="radio"
-              value="sub"
-              formControlName="purchaseType"
-              checked
-            />
-            <label for="subscription">Subscription</label>
-          </div>
-          <div>
-            <input
-              id="otp"
-              type="radio"
-              name="purchaseType"
-              value="otp"
-              formControlName="purchaseType"
-            />
-            <label for="otp">One-time purchase</label>
-          </div>
-        </fieldset>
-        <div id="purchaseTypeError" role="alert">
-          Purchase type is required
-        </div>
-        <div class="button-container">
-          <button
-            class="close"
-            (click)="$event.preventDefault(); closeBuyNowDialog()"
-          >
-            Close
-          </button>
-          <button class="next" type="submit">Next</button>
-        </div>
-      </form>
+      <app-purchase-type-form
+        (onClose)="closeBuyNowDialog()"
+        (onSubmit)="handlePurchaseTypeFormSubmit($event)"
+      />
     } @else if (purchaseType() === "sub") {
       <form
         [formGroup]="subscriptionForm"
@@ -223,9 +183,10 @@
           @if (
             subscriptionForm.controls.darkPact.invalid &&
             !subscriptionForm.controls.darkPact.untouched
-            ) {
+          ) {
             <div id="darkPactError" role="alert">
-              You are required to accept all risks of this product before purchasing
+              You are required to accept all risks of this product before
+              purchasing
             </div>
           }
         </div>

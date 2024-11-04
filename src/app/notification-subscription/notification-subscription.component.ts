@@ -6,11 +6,17 @@ import {
   PurchaseService,
   SubscriptionPurchaseOrder,
 } from '../../services/purchase.service';
+import { PurchaseTypeFormComponent } from './purchase-type-form/purchase-type-form.component';
 
 @Component({
   selector: 'app-notification-subscription',
   standalone: true,
-  imports: [NgOptimizedImage, CloseIconComponent, ReactiveFormsModule],
+  imports: [
+    NgOptimizedImage,
+    CloseIconComponent,
+    ReactiveFormsModule,
+    PurchaseTypeFormComponent,
+  ],
   templateUrl: './notification-subscription.component.html',
   styleUrl: './notification-subscription.component.scss',
 })
@@ -18,9 +24,7 @@ export class NotificationSubscriptionComponent {
   showDialog = signal(false);
   dialogOpenElement = signal<HTMLElement | undefined>(undefined);
   dialogClose = viewChild<ElementRef>('dialogClose');
-  purchaseTypeForm = this.formBuilder.group({
-    purchaseType: ['', Validators.required],
-  });
+
   subscriptionForm = this.formBuilder.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -46,17 +50,8 @@ export class NotificationSubscriptionComponent {
   closeBuyNowDialog() {
     this.showDialog.set(false);
     this.purchaseType.set(undefined);
-    this.purchaseTypeForm.reset();
     this.subscriptionForm.reset();
     this.dialogOpenElement()?.focus();
-  }
-
-  handlePurchaseTypeFormSubmit($event: Event) {
-    $event.preventDefault();
-    if (this.purchaseTypeForm.invalid) return;
-    this.purchaseType.set(
-      this.purchaseTypeForm.value.purchaseType as unknown as PurchaseType,
-    );
   }
 
   handleSubscriptionFormSubmit($event: Event) {
@@ -70,6 +65,10 @@ export class NotificationSubscriptionComponent {
 
     this.purchaseComplete.set(true);
   }
+
+  handlePurchaseTypeFormSubmit(purchaseType: PurchaseType) {
+    this.purchaseType.set(purchaseType);
+  }
 }
 
-type PurchaseType = 'sub' | 'otp';
+export type PurchaseType = 'sub' | 'otp';

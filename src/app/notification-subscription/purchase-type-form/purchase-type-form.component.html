@@ -1,0 +1,41 @@
+<form
+  [formGroup]="purchaseTypeForm"
+  (submit)="handlePurchaseTypeFormSubmit($event)"
+>
+  <fieldset
+    [attr.aria-invalid]="purchaseTypeForm.controls.purchaseType.invalid"
+    aria-errormessage="purchaseTypeError"
+  >
+    <legend>Would you like a subscription or a one time purchase?</legend>
+    <div>
+      <input
+        id="subscription"
+        name="purchaseType"
+        type="radio"
+        value="sub"
+        formControlName="purchaseType"
+        checked
+      />
+      <label for="subscription">Subscription</label>
+    </div>
+    <div>
+      <input
+        id="otp"
+        type="radio"
+        name="purchaseType"
+        value="otp"
+        formControlName="purchaseType"
+      />
+      <label for="otp">One-time purchase</label>
+    </div>
+  </fieldset>
+  @if (
+    purchaseTypeForm.controls.purchaseType.invalid && !purchaseTypeForm.controls.purchaseType.untouched
+  ) {
+    <div id="purchaseTypeError" role="alert">Purchase type is required</div>
+  }
+  <div class="button-container">
+    <button class="close" (click)="handleClose($event)">Close</button>
+    <button class="next" type="submit">Next</button>
+  </div>
+</form>
