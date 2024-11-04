@@ -9,28 +9,12 @@ import {
 
 describe('NotificationSubscriptionComponent', () => {
   let purchaseService: PurchaseService;
-  beforeEach(() => {
-    purchaseService = {
-      purchaseSubscription: jest.fn(),
-    };
-  });
+  beforeEach(() => {});
 
   it(`should open the purchase modal when 'Buy now' button is clicked`, async () => {
     const { user } = await renderComponent();
     const { dialog } = await openDialog(user);
     expect(dialog).toBeVisible();
-  });
-
-  it(`should focus the close button when the modal is opened`, async () => {
-    const { user } = await renderComponent();
-    const { dialog } = await openDialog(user);
-
-    const closeDialogBtn = within(dialog).getByRole('button', {
-      name: /close dialog/i,
-    });
-    await waitFor(() => {
-      expect(closeDialogBtn).toHaveFocus();
-    });
   });
 
   it('should return focus to the button use to open the modal when closed', async () => {
@@ -43,31 +27,6 @@ describe('NotificationSubscriptionComponent', () => {
     await user.click(closeButton);
 
     expect(buttons[1]).toHaveFocus();
-  });
-
-  it('should capture subscription info', async () => {
-    const { user } = await renderComponent();
-    await openDialog(user);
-
-    await fillInPurchaseTypeForm(user, 'Subscription');
-
-    await fillInSubscriptionPurchaseOrderForm(user, {
-      firstName: 'Alex',
-      lastName: 'McClure',
-      ssn: '123456789',
-    });
-
-    await screen.findByRole('heading', {
-      name: 'Your order will arrive eventually',
-    });
-
-    expect(purchaseService.purchaseSubscription).toHaveBeenCalledTimes(1);
-    expect(purchaseService.purchaseSubscription).toHaveBeenCalledWith({
-      firstName: 'Alex',
-      lastName: 'McClure',
-      ssn: '123456789',
-      darkPact: true,
-    });
   });
 
   it('should reset modal when closed', async () => {

@@ -85,38 +85,4 @@
   improbable becomes an Instagram post. <b>Don’t miss out on the hype!</b>
 </footer>
 
-@if (showDialog()) {
-  <div class="dialog-container" (click)="closeBuyNowDialog()">
-    <div class="dialog-background"></div>
-  </div>
-}
-
-<dialog
-  class="purchase-dialog"
-  [style]="showDialog() ? '' : 'display: none'"
-  aria-labelledby="dialogName"
-  [open]="showDialog()"
-  (keyup.escape)="closeBuyNowDialog()"
->
-  <div class="dialog-header">
-    <h2 id="dialogName">Purchase snake oil now!</h2>
-    <button class="dialog-close" (click)="closeBuyNowDialog()" #dialogClose>
-      <span class="sr-only">Close dialog</span><app-close-icon />
-    </button>
-  </div>
-  <div class="dialog-content">
-    @if (purchaseComplete()) {
-      <h1>Your order will arrive eventually</h1>
-    } @else if (!purchaseType()) {
-      <app-purchase-type-form
-        (onClose)="closeBuyNowDialog()"
-        (onSubmit)="handlePurchaseTypeFormSubmit($event)"
-      />
-    } @else if (purchaseType() === "sub") {
-      <app-subscription-form
-        (onSubmit)="handleSubscriptionFormSubmit($event)"
-        (onClose)="closeBuyNowDialog()"
-      />
-    }
-  </div>
-</dialog>
+<app-purchase-dialog (onClose)="handleDialogClose()" [showDialog]="showDialog()" [dialogOpenElement]="dialogOpenElement()"/>
