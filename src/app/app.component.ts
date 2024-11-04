@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NotificationSubscriptionComponent } from './notification-subscription/notification-subscription.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NotificationSubscriptionComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'angular-refactoring-workshop';
-}
+export class AppComponent {}

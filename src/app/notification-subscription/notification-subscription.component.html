@@ -1,0 +1,244 @@
+<header>
+  <h1>Discover the Magic of Snake Oil!</h1>
+  <h2>Unlock Your Potential with Our Revolutionary Elixirs!</h2>
+</header>
+<article>
+  <p>
+    Are you tired of mundane solutions for your everyday problems? Look no
+    further! At Snake Oil, Inc., we specialize in the finest snake oils that
+    promise to cure everything from heartbreak to the common cold. Our top
+    scientists (who may or may not have just read a few self-help books) have
+    formulated concoctions that are 100% guaranteed to leave you feeling...
+    well, different!
+  </p>
+
+  <button class="buy-now" (click)="showBuyNowDialog($event)">Buy now!</button>
+
+  <h2>Why Choose Snake Oil?</h2>
+  <p>
+    <b>Cures for Everything:</b> Acne? Gone! Insecurity? Obliterated! Lack of
+    motivation? We'll make you feel like you can run a marathon—at least for
+    five minutes!
+  </p>
+  <p>
+    <b>100% All-Natural Ingredients:</b> Our oils are extracted from the finest
+    mythical snakes that exist only in the imagination of our founder. No
+    animals harmed—promise!
+  </p>
+  <p>
+    <b>Scientific Backing:</b> Our “research” shows that 9 out of 10 people who
+    believe in our products think they work! That's a stat you can’t argue with!
+  </p>
+
+  <button class="buy-now" (click)="showBuyNowDialog($event)">Buy now!</button>
+
+  <br />
+
+  <h2>Featured Products:</h2>
+  <p>
+    <b>Miracle Mender:</b> Say goodbye to your broken dreams! One drop, and
+    you’ll be convinced you can achieve anything—especially if you close your
+    eyes and visualize it hard enough.
+  </p>
+  <p>
+    <b>Confidence Serum:</b> Feeling shy? Our special blend will have you
+    strutting like a peacock in no time (results may vary based on actual
+    courage levels).
+  </p>
+  <p>
+    <b>Instant Charm Potion:</b> Want to impress that special someone? Our
+    potion has a 0% success rate—but who needs success when you can be bold?
+  </p>
+
+  <button class="buy-now" (click)="showBuyNowDialog($event)">Buy now!</button>
+
+  <br />
+
+  <h2>Join the Movement!</h2>
+
+  <h4>
+    Don't just take our word for it. Here’s what our “satisfied” customers are
+    saying:
+  </h4>
+  <p>
+    “I felt different after just one sip—now I can’t stop telling people about
+    it!” <b>—Totally Real Reviewer</b>
+  </p>
+  <p>
+    “I didn’t get the job, but boy, did I feel good applying!”
+    <b>—Hopeful Applicant</b>
+  </p>
+
+  <button class="buy-now" (click)="showBuyNowDialog($event)">Buy now!</button>
+
+  <br />
+
+  <h1>
+    Act Now! For a limited time only, buy one bottle and receive a second bottle
+    absolutely free! (Just pay shipping, handling, and a small fee for our
+    emotional support team.)
+  </h1>
+  <button class="buy-now" (click)="showBuyNowDialog($event)">Buy now!</button>
+</article>
+<footer>
+  <b>Snake Oil, Inc.</b>: Where the impossible becomes improbable, and the
+  improbable becomes an Instagram post. <b>Don’t miss out on the hype!</b>
+</footer>
+
+@if (showDialog()) {
+  <div class="dialog-container" (click)="closeBuyNowDialog()">
+    <div class="dialog-background"></div>
+  </div>
+}
+
+<dialog
+  class="purchase-dialog"
+  [style]="showDialog() ? '' : 'display: none'"
+  aria-labelledby="dialogName"
+  [open]="showDialog()"
+  (keyup.escape)="closeBuyNowDialog()"
+>
+  <div class="dialog-header">
+    <h2 id="dialogName">Purchase snake oil now!</h2>
+    <button class="dialog-close" (click)="closeBuyNowDialog()" #dialogClose>
+      <span class="sr-only">Close dialog</span><app-close-icon />
+    </button>
+  </div>
+  <div class="dialog-content">
+    @if(purchaseComplete()) {
+      <h1>Your order will arrive eventually</h1>
+    } @else if (!purchaseType()) {
+      <form
+        [formGroup]="purchaseTypeForm"
+        (submit)="handlePurchaseTypeFormSubmit($event)"
+      >
+        <fieldset
+          [attr.aria-invalid]="purchaseTypeForm.controls.purchaseType.invalid"
+          aria-errormessage="purchaseTypeError"
+        >
+          <legend>Would you like a subscription or a one time purchase?</legend>
+          <div>
+            <input
+              id="subscription"
+              name="purchaseType"
+              type="radio"
+              value="sub"
+              formControlName="purchaseType"
+              checked
+            />
+            <label for="subscription">Subscription</label>
+          </div>
+          <div>
+            <input
+              id="otp"
+              type="radio"
+              name="purchaseType"
+              value="otp"
+              formControlName="purchaseType"
+            />
+            <label for="otp">One-time purchase</label>
+          </div>
+        </fieldset>
+        <div id="purchaseTypeError" role="alert">
+          Purchase type is required
+        </div>
+        <div class="button-container">
+          <button
+            class="close"
+            (click)="$event.preventDefault(); closeBuyNowDialog()"
+          >
+            Close
+          </button>
+          <button class="next" type="submit">Next</button>
+        </div>
+      </form>
+    } @else if (purchaseType() === "sub") {
+      <form
+        [formGroup]="subscriptionForm"
+        (submit)="handleSubscriptionFormSubmit($event)"
+      >
+        <div>
+          <label for="firstName">First name</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            [attr.aria-invalid]="subscriptionForm.controls.firstName.invalid"
+            aria-errormessage="firstNameError"
+          />
+          @if (
+            subscriptionForm.controls.firstName.invalid &&
+            !subscriptionForm.controls.firstName.untouched
+          ) {
+            <div id="firstNameError">First name is required</div>
+          }
+        </div>
+        <div>
+          <label for="lastName">Last name</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            [attr.aria-invalid]="subscriptionForm.controls.lastName.invalid"
+            aria-errormessage="lastNameError"
+          />
+          @if (
+            subscriptionForm.controls.lastName.invalid &&
+            !subscriptionForm.controls.lastName.untouched
+          ) {
+            <div id="lastNameError">Last name is required</div>
+          }
+        </div>
+        <div>
+          <label for="ssn">SSN</label>
+          <input
+            type="text"
+            id="ssn"
+            formControlName="ssn"
+            [attr.aria-invalid]="subscriptionForm.controls.ssn.invalid"
+            aria-errormessage="ssnError"
+          />
+          @if (
+            subscriptionForm.controls.ssn.invalid &&
+            !subscriptionForm.controls.ssn.untouched
+          ) {
+            <div id="ssnError" role="alert">
+              @if (subscriptionForm.controls.ssn.hasError("required")) {
+                SSN is required
+              } @else if (subscriptionForm.controls.ssn.hasError("format")) {
+                SSN is improperly formatted
+              }
+            </div>
+          }
+        </div>
+        <div>
+          <label for="darkPact">I accept all risks of this product</label>
+          <input
+            type="checkbox"
+            id="darkPact"
+            formControlName="darkPact"
+            [attr.aria-invalid]="subscriptionForm.controls.darkPact.invalid"
+            aria-errormessage="darkPactError"
+          />
+          @if (
+            subscriptionForm.controls.darkPact.invalid &&
+            !subscriptionForm.controls.darkPact.untouched
+            ) {
+            <div id="darkPactError" role="alert">
+              You are required to accept all risks of this product before purchasing
+            </div>
+          }
+        </div>
+        <div class="button-container">
+          <button
+            class="close"
+            (click)="$event.preventDefault(); closeBuyNowDialog()"
+          >
+            Close
+          </button>
+          <button class="next" type="submit">Submit</button>
+        </div>
+      </form>
+    }
+  </div>
+</dialog>

@@ -1,0 +1,9 @@
+@import "../../styles";
+
+svg {
+  height: 2rem;
+  width: 2rem;
+  g {
+    fill: $primary-color;
+  }
+}
